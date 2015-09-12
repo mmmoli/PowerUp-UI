@@ -25,11 +25,11 @@ module.exports = getConfig({
                 '<html>',
                 '<head>',
                 '<link href="' + data.css + '" rel="stylesheet" type="text/css" />',
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.all.min.js"></script>',
                 '</head>',
                 '<body>',
                 '<span id="powerBar"></span>',
                 '<script src="' + data.main + '"></script>',
-                '<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.all.min.js"></script>',
                 '</body>',
                 '</html>'
             ].join('')
