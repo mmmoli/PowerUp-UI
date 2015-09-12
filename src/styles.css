@@ -1,0 +1,6 @@
+#powerBar {
+    position: absolute;
+    background-color: black;
+    bottom: 0;
+    width: 100%;
+}

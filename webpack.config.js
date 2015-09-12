@@ -27,7 +27,7 @@ module.exports = getConfig({
                 '<link href="' + data.css + '" rel="stylesheet" type="text/css" />',
                 '</head>',
                 '<body>',
-                '<h1>Home Page</h1>',
+                '<span id="powerBar"></span>',
                 '<script src="' + data.main + '"></script>',
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.all.min.js"></script>',
                 '</body>',

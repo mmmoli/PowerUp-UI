@@ -1,1 +1,5 @@
-window.alert('hello');
+require('./styles.css');
+
+let powerBar = document.querySelector('#powerBar');
+
+
