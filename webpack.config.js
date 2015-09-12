@@ -16,5 +16,23 @@ module.exports = getConfig({
     // get a fresh folder. Usually you want this
     // but since it's destructive we make it
     // false by default
-    clearBeforeBuild: true
+    clearBeforeBuild: true,
+
+    html: function (data) {
+        // here we return an object where each key is a file to be generated
+        return {
+            'index.html': [
+                '<html>',
+                '<head>',
+                '<link href="' + data.css + '" rel="stylesheet" type="text/css" />',
+                '</head>',
+                '<body>',
+                '<h1>Home Page</h1>',
+                '<script src="' + data.main + '"></script>',
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.all.min.js"></script>',
+                '</body>',
+                '</html>'
+            ].join('')
+        }
+    }
 });
