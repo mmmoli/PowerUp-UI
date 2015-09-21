@@ -1,99 +1,55 @@
 require('./styles.css');
 
-let powerBar = document.querySelector('#powerBar');
+console.clear();
+
+var powerBar = document.querySelector('#powerBar');
+
+var mouseDownStream = Rx.Observable.fromEvent(document, 'mousedown');
+var mouseUpStream = Rx.Observable.fromEvent(document, 'mouseup');
+
+var tick = Rx.Observable.generate(
+    0,
+    function (x) { return true; },
+    function (x) { return x + 1; },
+    function (x) { return x; },
+    Rx.Scheduler.requestAnimationFrame
+);
 
 
-let mouseDownStream = Rx.Observable.fromEvent(document, 'mousedown').map(true);
-let mouseUpStream = Rx.Observable.fromEvent(document, 'mouseup').map(false);
 
-let tick = Rx.Observable.interval(100);
-
-
-//let shouldPowerUpStream = Rx.Observable.merge(mouseDownStream, mouseUpStream);
-//
-
-var chargeUpStream = mouseDownStream
-
-        .flatMap(() => {
-            return tick.takeUntil(mouseUpStream)
-        })
-
-        .map((x) => {
-
-            // x represents a duration of time
-            // that we should power up
-
-            // Use x to determine potency
-            // of the charge
-
-            // Return the new charge value
-            return x * 2;
-        })
-
-    ;
-
-var chargeDownStream = mouseUpStream
+var diffForceUpStream = mouseDownStream
 
         .flatMap(() => {
-            return tick.takeUntil(mouseDownStream)
+            return tick.takeUntil(mouseUpStream);
         })
 
-        .map((x) => {
-
-            // x represents a duration of time
-            // that we should power up
-
-            // Use x to determine potency
-            // of the charge
-
-            // Return the new charge value
-            return x * -0.2;
-        })
+        .map((value) => 0.1 * value)
 
     ;
 
 
-let chargeStream = Rx.Observable.merge(chargeUpStream, chargeDownStream)
+var diffForceDownStream = mouseUpStream
 
-        .scan((sum, x) => {
-            return sum + x;
+        .flatMap(() => {
+            return tick.takeUntil(mouseDownStream);
         })
 
-        .filter(value => value >= 0)
+        .map((value) => 0.02 * value)
 
     ;
 
 
-chargeStream.subscribe((value) => {
-    "use strict";
-    console.log(value);
-    powerBar.style.height = `${value * 0.4}%`;
+
+var diffForceStream = diffForceUpStream.combineLatest(
+    diffForceDownStream,
+    (up, down) => {
+        return up - down;
+    }
+).filter((value) => value >= 0);
+
+
+diffForceStream.subscribe((value) => {
+
+    value.reduce
+    powerBar.style.height = `${value}%`;
 });
-
-//
-//md
-//    .flatMap(() => tick.takeUntil(mu))
-//    .subscribe((power) => {
-//        "use strict";
-
-//    });
-//
-
-
-var source = Rx.Observable
-    .range(1, 8)
-    .flatMapLatest(function (x) {
-        return Rx.Observable.from([x + 'a', x + 'b']);
-    });
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: %s', x);
-    },
-    function (err) {
-        console.log('Error: %s', err);
-    },
-    function () {
-        console.log('Completed');
-    });
-
